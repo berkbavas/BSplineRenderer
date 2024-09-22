@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.25.1)
 
-project(BSplineCurves3D VERSION 1.0.0 LANGUAGES CXX)
+project(BSplineRenderer VERSION 1.0.0 LANGUAGES CXX)
 
 set(CMAKE_PREFIX_PATH "$ENV{Qt6_DIR}")
 
@@ -11,14 +11,14 @@ set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
 set(CMAKE_AUTOUIC ON)
 
-set(INCLUDE_DIR libs/qtimgui/include
-                libs/Eigen)
+set(INCLUDE_DIR Libs/qtimgui/include
+                Libs/Eigen)
 
-set(LIBS_DIR libs/qtimgui/lib)
+set(LIBS_DIR Libs/qtimgui/lib)
 
 set(LIBS imgui implot qt_imgui_widgets)
 
-file(GLOB SOURCES src/*.cpp src/*.h *.qrc)
+file(GLOB SOURCES Source/*.cpp Source/*.h *.qrc)
 
 find_package(Qt6 COMPONENTS Core Widgets OpenGL Gui Concurrent REQUIRED)
 
@@ -28,23 +28,20 @@ include_directories("${CMAKE_CURRENT_SOURCE_DIR}" ${INCLUDE_DIR})
 
 link_directories(${LIBS_DIR})
 
-add_executable(BSplineCurves3D ${SOURCES})
+add_executable(BSplineRenderer ${SOURCES})
 
-target_link_libraries(BSplineCurves3D Qt6::Core Qt6::Widgets Qt6::OpenGL Qt6::Concurrent ${LIBS})
+target_link_libraries(BSplineRenderer Qt6::Core Qt6::Widgets Qt6::OpenGL Qt6::Concurrent ${LIBS})
 
-add_custom_command(TARGET BSplineCurves3D
+add_custom_command(TARGET BSplineRenderer
     POST_BUILD COMMAND xcopy /E /Y 
-    "\"$(SolutionDir)../resources\""
-    "\"$(OutDir)resources/*\""
-)
+    "\"$(SolutionDir)../Resources\""
+    "\"$(OutDir)Resources/*\"")
 
-add_custom_command(TARGET BSplineCurves3D
+add_custom_command(TARGET BSplineRenderer
     POST_BUILD COMMAND xcopy /E /Y 
-    "\"$(SolutionDir)../resources\""
-    "\"$(BuildDir)resources/*\""
-)
+    "\"$(SolutionDir)../Resources\""
+    "\"$(BuildDir)Resources/*\"")
 
-add_custom_command(TARGET BSplineCurves3D
+add_custom_command(TARGET BSplineRenderer
     POST_BUILD COMMAND "$ENV{Qt6_DIR}/bin/windeployqt.exe"
-    "\"$(OutDir)$(TargetName)$(TargetExt)\""
-)
+    "\"$(OutDir)$(TargetName)$(TargetExt)\"")
