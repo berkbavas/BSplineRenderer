@@ -1,5 +1,5 @@
 # B-Spline Renderer 
-Rendering 3D B-Splines using `OpenGL`, `Qt`, `C++` and `Eigen`.
+3D B-Spline renderer written in ``C++`` using ``Qt``, ``OpenGL`` and ``Eigen``.
 
 B-splines are parameterics curves which consists of several Bezier curves whose control points satisfy some special conditions.
 I used cubic Bezier curves for the interpolation of knots.
