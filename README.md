@@ -26,3 +26,6 @@ The vertex generation algorithm can be found in `PipeDumb.geom` shader or in `Ge
 ## UML Diagram
 ![UML](https://github.com/berkbavas/BSplineCurves3D/assets/53399385/c2c29dcc-d797-4f91-967c-afb11702af70)
 
+## Video
+https://github.com/user-attachments/assets/daf205b8-dc9c-4aac-8f7b-df823693db86
+
