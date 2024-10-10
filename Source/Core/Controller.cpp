@@ -26,6 +26,7 @@ BSplineRenderer::Controller::Controller(QObject* parent)
     mEventHandler->SetRendererManager(mRendererManager);
 
     mRendererManager->SetCurveContainer(mCurveContainer);
+    mImGuiWindow->SetRendererManager(mRendererManager);
 
     connect(mWindow, &Window::Initialize, this, &Controller::Initialize);
     connect(mWindow, &Window::Render, this, &Controller::Render);

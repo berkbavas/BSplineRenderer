@@ -29,7 +29,7 @@ namespace BSplineRenderer
         FreeCameraPtr mCamera;
         CurveSelectionFramebuffer* mFramebuffer{ nullptr };
 
-        DEFINE_MEMBER(int, NumberSegments, DEFAULT_NUMBER_OF_SEGMENTS);
+        DEFINE_MEMBER(int, NumberOfSegments, DEFAULT_NUMBER_OF_SEGMENTS);
         DEFINE_MEMBER(int, NumberOfSectors, DEFAULT_NUMBER_OF_SECTORS);
     };
 }

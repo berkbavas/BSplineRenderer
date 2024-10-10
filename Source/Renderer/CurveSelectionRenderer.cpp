@@ -18,8 +18,8 @@ void BSplineRenderer::CurveSelectionRenderer::Render()
     mFramebuffer->Bind();
 
     mShader->Bind();
-    mShader->SetUniformValue("numberOfSegments", mNumberSegments);
-    mShader->SetUniformValue("numberOfSectors", mNumberSegments);
+    mShader->SetUniformValue("numberOfSegments", mNumberOfSegments);
+    mShader->SetUniformValue("numberOfSectors", mNumberOfSectors);
     mShader->SetUniformValue("VP", mCamera->GetViewProjectionMatrix());
 
     const auto& curves = mCurveContainer->GetCurves();

@@ -108,10 +108,27 @@ void BSplineRenderer::RendererManager::RemoveModel(ModelPtr model)
 
 void BSplineRenderer::RendererManager::SetNumberOfSegments(int numberOfSegments)
 {
-    mSplineRenderer->SetNumberSegments(numberOfSegments);
+    mSplineRenderer->SetNumberOfSegments(numberOfSegments);
+    mCurveSelectionRenderer->SetNumberOfSegments(numberOfSegments);
 }
 
 void BSplineRenderer::RendererManager::SetNumberOfSectors(int numberOfSectors)
 {
     mSplineRenderer->SetNumberOfSectors(numberOfSectors);
+    mCurveSelectionRenderer->SetNumberOfSectors(numberOfSectors);
+}
+
+int BSplineRenderer::RendererManager::GetNumberOfSegments() const
+{
+    return mSplineRenderer->GetNumberOfSegments();
+}
+
+int BSplineRenderer::RendererManager::GetNumberOfSectors() const
+{
+    return mSplineRenderer->GetNumberOfSectors();
+}
+
+bool* BSplineRenderer::RendererManager::GetWireframe()
+{
+    return &mSplineRenderer->GetWireframe_NonConst();
 }

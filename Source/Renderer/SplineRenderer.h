@@ -32,7 +32,7 @@ namespace BSplineRenderer
         Shader* mSplineShader;
 
         DEFINE_MEMBER(bool, Wireframe, false);
-        DEFINE_MEMBER(int, NumberSegments, DEFAULT_NUMBER_OF_SEGMENTS);
+        DEFINE_MEMBER(int, NumberOfSegments, DEFAULT_NUMBER_OF_SEGMENTS);
         DEFINE_MEMBER(int, NumberOfSectors, DEFAULT_NUMBER_OF_SECTORS);
     };
 }

@@ -23,8 +23,8 @@ void BSplineRenderer::SplineRenderer::Render()
     }
 
     mSplineShader->Bind();
-    mSplineShader->SetUniformValue("numberOfSegments", mNumberSegments);
-    mSplineShader->SetUniformValue("numberOfSectors", mNumberSegments);
+    mSplineShader->SetUniformValue("numberOfSegments", mNumberOfSegments);
+    mSplineShader->SetUniformValue("numberOfSectors", mNumberOfSectors);
     mSplineShader->SetUniformValue("VP", mCamera->GetProjectionMatrix() * mCamera->GetViewMatrix());
 
     mSplineShader->SetUniformValue("cameraPosition", mCamera->GetPosition());

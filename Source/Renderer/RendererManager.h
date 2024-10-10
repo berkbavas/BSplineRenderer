@@ -41,6 +41,11 @@ namespace BSplineRenderer
         void SetNumberOfSegments(int numberOfSegments);
         void SetNumberOfSectors(int numberOfSectors);
 
+        int GetNumberOfSegments() const;
+        int GetNumberOfSectors() const;
+
+        bool* GetWireframe();
+
       private:
         Shader* mModelShader;
         Shader* mSkyBoxShader;

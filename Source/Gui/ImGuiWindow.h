@@ -7,7 +7,6 @@
 
 namespace BSplineRenderer
 {
-    class CurveContainer;
     class RendererManager;
 
     class ImGuiWindow : public QObject
@@ -17,5 +16,13 @@ namespace BSplineRenderer
         explicit ImGuiWindow(QObject* parent);
 
         void Draw();
+
+        void SetRendererManager(RendererManager* manager);
+
+      private:
+        int mNumberOfSegments;
+        int mNumberOfSectors;
+
+        RendererManager* mRendererManager;
     };
 }
