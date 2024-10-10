@@ -1,0 +1,109 @@
+#version 450
+
+layout(quads, equal_spacing, ccw) in;
+
+float customPow(float x, float y)
+{
+    if (x == 0 && y == 0)
+    {
+        return 1;
+    }
+
+    return pow(x, y);
+}
+
+float factorial(int n)
+{
+    float result = 1;
+
+    for (int i = 2; i <= n; ++i)
+    {
+        result *= i;
+    }
+
+    return result;
+}
+
+float choose(int n, int k)
+{
+    return factorial(n) / (factorial(k) * factorial(n - k));
+}
+
+vec3 getPositionAt(vec3 controlPoints[4], float t)
+{
+    vec3 result = vec3(0, 0, 0);
+    for (int i = 0; i <= 3; ++i)
+    {
+        float c0 = choose(3, i);
+        float c1 = customPow(t, i);
+        float c2 = customPow(1 - t, 3 - i);
+        result += c0 * c1 * c2 * controlPoints[i];
+    }
+    return result;
+}
+
+vec3 getTangentAt(vec3 controlPoints[4], float t)
+{
+    vec3 tangent = vec3(0, 0, 0);
+
+    for (int i = 0; i <= 2; i++)
+    {
+        float c0 = choose(2, i);
+        float c1 = customPow(t, i);
+        float c2 = customPow(1 - t, 2 - i);
+        tangent += 3 * c0 * c1 * c2 * (controlPoints[i + 1] - controlPoints[i]);
+    }
+
+    return normalize(tangent);
+}
+
+mat3 getRotationMatrix(vec3 axis, float angle)
+{
+    axis = normalize(axis);
+    float s = sin(angle);
+    float c = cos(angle);
+    float oc = 1.0f - c;
+
+    return mat3(oc * axis.x * axis.x + c, oc * axis.x * axis.y - axis.z * s, oc * axis.z * axis.x + axis.y * s,
+                oc * axis.x * axis.y + axis.z * s, oc * axis.y * axis.y + c, oc * axis.y * axis.z - axis.x * s,
+                oc * axis.z * axis.x - axis.y * s, oc * axis.y * axis.z + axis.x * s, oc * axis.z * axis.z + c);
+}
+
+const float PI = 3.1415926538;
+const vec3 AXIS_Y = vec3(0, -1, 0);
+
+uniform mat4 VP;
+uniform float radius;
+
+out vec3 fs_Normal;
+out vec3 fs_Position; 
+
+void main()
+{
+    float t = gl_TessCoord.x;
+    float s = gl_TessCoord.y;
+
+    vec3 p0 = gl_in[0].gl_Position.xyz;
+    vec3 p1 = gl_in[1].gl_Position.xyz;
+    vec3 p2 = gl_in[2].gl_Position.xyz;
+    vec3 p3 = gl_in[3].gl_Position.xyz;
+
+    vec3 controlPoints[4] = { p0, p1, p2, p3 };
+
+    vec3 position = getPositionAt(controlPoints, t);
+    vec3 tangent = getTangentAt(controlPoints, t);
+
+    vec3 axis = cross(tangent, AXIS_Y);
+    if(length(tangent - AXIS_Y) < 0.001)
+    {
+        axis = AXIS_Y;
+    }
+    float angle = acos(dot(tangent, AXIS_Y));
+    mat3 rotation = getRotationMatrix(axis, angle);
+    vec3 normal = rotation * vec3(cos(2 * PI * s), 0, sin(2 * PI * s));
+
+    position += radius * normal;
+    fs_Normal = normal;
+    fs_Position = position;
+    gl_Position = VP * vec4(position, 1.0f);
+}

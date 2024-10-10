@@ -1,13 +1,20 @@
-#include "Window.h"
+#include "Core/Controller.h"
+#include "Util/Logger.h"
+
 #include <QApplication>
+#include <QImageReader>
 
-int main(int argc, char *argv[])
+using namespace BSplineRenderer;
+
+int main(int argc, char* argv[])
 {
-    QApplication a(argc, argv);
+    QApplication app(argc, argv);
 
-    BSplineCurves3D::Window w;
-    w.resize(1600, 900);
-    w.show();
+    qInstallMessageHandler(Logger::QtMessageOutputCallback);
 
-    return a.exec();
+    Controller controller;
+
+    controller.Run();
+
+    return app.exec();
 }

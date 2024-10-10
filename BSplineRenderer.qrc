@@ -1,28 +1,13 @@
 <RCC>
     <qresource prefix="/">
-        <file>Resources/Models/Camera.obj</file>
-        <file>Resources/Models/Capsule.obj</file>
-        <file>Resources/Models/Cone.obj</file>
-        <file>Resources/Models/Cube.obj</file>
-        <file>Resources/Models/Cylinder.obj</file>
-        <file>Resources/Models/Dome.obj</file>
-        <file>Resources/Models/Plane.obj</file>
-        <file>Resources/Models/Pyramid.obj</file>
-        <file>Resources/Models/Sphere.obj</file>
-        <file>Resources/Models/Suzanne.obj</file>
-        <file>Resources/Models/Tetrahedron.obj</file>
-        <file>Resources/Models/Torus.obj</file>
-        <file>Resources/Models/TorusKnot.obj</file>
-        <file>Resources/Shaders/Basic.frag</file>
-        <file>Resources/Shaders/Basic.vert</file>
-        <file>Resources/Shaders/Path.frag</file>
-        <file>Resources/Shaders/Path.vert</file>
-        <file>Resources/Shaders/PipeDumb.frag</file>
-        <file>Resources/Shaders/PipeDumb.geom</file>
-        <file>Resources/Shaders/PipeDumb.vert</file>
-        <file>Resources/Data/test-curves-heavy.json</file>
-        <file>Resources/Data/test-curves-light.json</file>
-        <file>Resources/Shaders/PipeSmart.frag</file>
-        <file>Resources/Shaders/PipeSmart.vert</file>
+    <file>Resources/Shaders/Model.vert</file>
+    <file>Resources/Shaders/Model.frag</file>
+    <file>Resources/Shaders/SkyBox.vert</file>
+    <file>Resources/Shaders/SkyBox.frag</file>
+    <file>Resources/Shaders/Spline.vert</file>
+    <file>Resources/Shaders/Spline.tcs</file>
+    <file>Resources/Shaders/Spline.tes</file>
+    <file>Resources/Shaders/Spline.frag</file>
+    <file>Resources/Shaders/CurveSelection.frag</file>
     </qresource>
 </RCC>

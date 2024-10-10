@@ -1,0 +1,19 @@
+#version 450 core
+
+layout(vertices = 4) out;
+
+uniform int numberOfSegments;
+uniform int numberOfSectors;
+
+void main()
+{
+    gl_out[gl_InvocationID].gl_Position = gl_in[gl_InvocationID].gl_Position;
+
+    gl_TessLevelInner[0] = float(numberOfSectors);
+    gl_TessLevelInner[1] = float(numberOfSegments);
+
+    gl_TessLevelOuter[0] = gl_TessLevelInner[1];
+    gl_TessLevelOuter[1] = gl_TessLevelInner[0];
+    gl_TessLevelOuter[2] = gl_TessLevelInner[1];
+    gl_TessLevelOuter[3] = gl_TessLevelInner[0];    
+}
