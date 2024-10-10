@@ -17,7 +17,7 @@ The algorithm for the generation of the curves can be found [here](https://www.m
 7) Enter the folder `cd Build`.
 8) Run CMake `cmake ..`.
 9) Open `BSplineRenderer.sln` with `Visual Studio 2022`.
-10) Build `Release` configuration.
+10) Build with `Release` configuration.
 
 ## Video
 https://github.com/user-attachments/assets/daf205b8-dc9c-4aac-8f7b-df823693db86
