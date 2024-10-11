@@ -49,6 +49,9 @@ BSplineRenderer::Controller::Controller(QObject* parent)
                 mRendererManager->SetSelectedKnot(knot);
                 mImGuiWindow->SetSelectedKnot(knot); //
             });
+
+    connect(mEventHandler, &EventHandler::KnotAroundChanged, this, [this](KnotPtr knot)
+            { mRendererManager->SetKnotAround(knot); });
 }
 
 BSplineRenderer::Controller::~Controller()

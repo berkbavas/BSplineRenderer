@@ -152,7 +152,12 @@ void BSplineRenderer::RendererManager::RenderKnots(SplinePtr curve)
         if (mSelectedKnot == knot)
         {
             mSphereModel->SetColor(QVector4D(0, 1, 0, 1));
-            mSphereModel->SetScale(2 * r, 2 * r, 2 * r);
+            mSphereModel->SetScale(2.5 * r, 2.5 * r, 2.5 * r);
+        }
+        else if (mKnotAround == knot)
+        {
+            mSphereModel->SetColor(QVector4D(1, 1, 0, 1));
+            mSphereModel->SetScale(2.5 * r, 2.5 * r, 2.5 * r);
         }
         else
         {

@@ -49,6 +49,7 @@ namespace BSplineRenderer
       public slots:
         void SetSelectedCurve(SplinePtr spline) { mSelectedCurve = spline; }
         void SetSelectedKnot(KnotPtr knot) { mSelectedKnot = knot; }
+        void SetKnotAround(KnotPtr knot) { mKnotAround = knot; }
 
       private:
         void RenderKnots(SplinePtr curve);
@@ -69,5 +70,6 @@ namespace BSplineRenderer
 
         SplinePtr mSelectedCurve{ nullptr };
         KnotPtr mSelectedKnot{ nullptr };
+        KnotPtr mKnotAround{ nullptr };
     };
 }

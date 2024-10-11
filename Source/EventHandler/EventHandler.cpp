@@ -28,11 +28,18 @@ void BSplineRenderer::EventHandler::OnMousePressed(QMouseEvent* event)
 
     if (event->button() == Qt::LeftButton)
     {
-        TrySelectCurve(mMouse.x, mMouse.y);
-
-        if (mSelectedCurve)
+        if (mKnotAround)
         {
             TrySelectKnot(mMouse.x, mMouse.y);
+        }
+        else
+        {
+            TrySelectCurve(mMouse.x, mMouse.y);
+
+            if (mSelectedCurve)
+            {
+                TrySelectKnot(mMouse.x, mMouse.y);
+            }
         }
     }
     else if (event->button() == Qt::RightButton)
@@ -117,6 +124,16 @@ void BSplineRenderer::EventHandler::OnMouseMoved(QMouseEvent* event)
             }
         }
     }
+    else if (mMouse.button == Qt::NoButton)
+    {
+        if (mSelectedCurve)
+        {
+            QVector3D direction = mCamera->GetDirectionFromScreenCoodinates(mMouse.x, mMouse.y);
+            QVector3D origin = mCamera->GetPosition();
+            KnotPtr knot = mSelectedCurve->GetClosestKnotToRay(origin, direction, 3.0f * mSelectedCurve->GetRadius());
+            SetKnotAround(knot);
+        }
+    }
 }
 
 void BSplineRenderer::EventHandler::OnWheelMoved(QWheelEvent* event)
@@ -138,6 +155,15 @@ void BSplineRenderer::EventHandler::SetSelectedKnot(KnotPtr knot)
     emit SelectedKnotChanged(mSelectedKnot);
 }
 
+void BSplineRenderer::EventHandler::SetKnotAround(KnotPtr knot)
+{
+    if (mKnotAround == knot)
+        return;
+
+    mKnotAround = knot;
+    emit KnotAroundChanged(mKnotAround);
+}
+
 void BSplineRenderer::EventHandler::SetSelectedCurve(SplinePtr spline)
 {
     if (mSelectedCurve == spline)
@@ -156,7 +182,7 @@ void BSplineRenderer::EventHandler::TrySelectKnot(float x, float y)
     {
         QVector3D direction = mCamera->GetDirectionFromScreenCoodinates(x, y);
         QVector3D origin = mCamera->GetPosition();
-        selectedKnot = mSelectedCurve->GetClosestKnotToRay(origin, direction, 2.0f * mSelectedCurve->GetRadius());
+        selectedKnot = mSelectedCurve->GetClosestKnotToRay(origin, direction, 3.0f * mSelectedCurve->GetRadius());
     }
 
     SetSelectedKnot(selectedKnot);

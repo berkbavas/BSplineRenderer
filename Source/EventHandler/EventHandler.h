@@ -32,14 +32,16 @@ namespace BSplineRenderer
 
         Eigen::Vector3f GetViewDirection() const;
 
-        void SetSelectedKnot(KnotPtr knot);
         void SetSelectedCurve(SplinePtr spline);
+        void SetSelectedKnot(KnotPtr knot);
+        void SetKnotAround(KnotPtr knot);
 
         void SetDevicePixelRatio(float devicePixelRatio) { mDevicePixelRatio = devicePixelRatio; }
 
       signals:
         void SelectedKnotChanged(KnotPtr knot);
         void SelectedCurveChanged(SplinePtr curve);
+        void KnotAroundChanged(KnotPtr knot);
 
       private:
         void TrySelectKnot(float x, float y);
@@ -51,6 +53,7 @@ namespace BSplineRenderer
         Mouse mMouse;
         SplinePtr mSelectedCurve{ nullptr };
         KnotPtr mSelectedKnot{ nullptr };
+        KnotPtr mKnotAround{ nullptr };
 
         CurveContainer* mCurveContainer;
         RendererManager* mRendererManager;
