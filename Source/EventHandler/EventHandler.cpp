@@ -59,7 +59,7 @@ void BSplineRenderer::EventHandler::OnMousePressed(QMouseEvent* event)
             const float t = ray.intersection(plane);
             Eigen::Vector3f intersection = ray.pointAt(t);
 
-            if (std::isnan(t) == false && std::isinf(t) == false)
+            if (std::isnan(t) == false && std::isinf(t) == false && t > 0)
             {
                 const auto knot = mSelectedCurve->AddKnot(intersection.x(), intersection.y(), intersection.z());
                 SetSelectedKnot(knot);
