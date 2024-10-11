@@ -29,7 +29,7 @@ void main()
     float ambient = light.ambient * curve.ambient;
 
     // Diffuse
-    float diffuse = max(dot(fs_Normal, light.direction), 0.0) * light.diffuse * curve.diffuse;
+    float diffuse = max(dot(fs_Normal, -light.direction), 0.0) * light.diffuse * curve.diffuse;
 
     // Combine
     out_Color = (ambient + diffuse) * curve.color * light.color;

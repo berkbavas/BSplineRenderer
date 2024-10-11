@@ -29,7 +29,7 @@ void main()
     float ambient = light.ambient * model.ambient;
 
     // Diffuse
-    float diffuse = max(dot(fs_Normal, light.direction), 0.0) * light.diffuse * model.diffuse;
+    float diffuse = max(dot(fs_Normal, -light.direction), 0.0) * light.diffuse * model.diffuse;
 
     // Combine
     out_Color = (ambient + diffuse) * model.color * light.color;

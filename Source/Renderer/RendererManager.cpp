@@ -52,6 +52,8 @@ void BSplineRenderer::RendererManager::Resize(int width, int height)
 
 void BSplineRenderer::RendererManager::Render()
 {
+    mLight->SetDirection(mCamera->GetViewDirection());
+
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
     glViewport(0, 0, mCamera->GetWidth(), mCamera->GetHeight());
     glClearColor(0, 0, 0, 1);
