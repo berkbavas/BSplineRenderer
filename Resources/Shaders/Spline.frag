@@ -5,8 +5,6 @@ struct Curve
     vec4 color;
     float ambient;
     float diffuse;
-    float specular;
-    float shininess;
 };
 
 struct Light
@@ -15,10 +13,8 @@ struct Light
     vec3 direction;
     float ambient;
     float diffuse;
-    float specular;
 };
 
-uniform vec3 cameraPosition;
 uniform Curve curve;
 uniform Light light;
 
@@ -35,11 +31,6 @@ void main()
     // Diffuse
     float diffuse = max(dot(fs_Normal, light.direction), 0.0) * light.diffuse * curve.diffuse;
 
-    // Specular
-    vec3 viewDirection = normalize(cameraPosition - fs_Position);
-    vec3 reflectDirection = reflect(-light.direction, fs_Normal);
-    float specular = pow(max(dot(viewDirection, reflectDirection), 0.0), curve.shininess) * light.specular * curve.specular;
-
     // Combine
-    out_Color = (ambient + diffuse + specular) * curve.color * light.color;
+    out_Color = (ambient + diffuse) * curve.color * light.color;
 }

@@ -46,7 +46,13 @@ namespace BSplineRenderer
 
         bool* GetWireframe();
 
+      public slots:
+        void SetSelectedCurve(SplinePtr spline) { mSelectedCurve = spline; }
+        void SetSelectedKnot(KnotPtr knot) { mSelectedKnot = knot; }
+
       private:
+        void RenderKnots(SplinePtr curve);
+
         Shader* mModelShader;
         Shader* mSkyBoxShader;
         CurveContainer* mCurveContainer;
@@ -56,8 +62,12 @@ namespace BSplineRenderer
         QVector<ModelPtr> mModels;
 
         SkyBoxPtr mSkyBox;
+        Model* mSphereModel;
 
         SplineRenderer* mSplineRenderer;
         CurveSelectionRenderer* mCurveSelectionRenderer;
+
+        SplinePtr mSelectedCurve{ nullptr };
+        KnotPtr mSelectedKnot{ nullptr };
     };
 }

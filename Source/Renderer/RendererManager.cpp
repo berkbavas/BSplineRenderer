@@ -9,7 +9,7 @@ BSplineRenderer::RendererManager::RendererManager()
     mCamera->SetPosition(0, 0, 10);
     mCamera->MakeDirty();
     mLight = std::make_shared<DirectionalLight>();
-    mLight->SetDirection(QVector3D(1, -1, 1).normalized());
+    mLight->SetDirection(QVector3D(0, 0, 1).normalized());
 
     mSplineRenderer = new SplineRenderer;
     mCurveSelectionRenderer = new CurveSelectionRenderer;
@@ -40,6 +40,8 @@ void BSplineRenderer::RendererManager::Initialize()
 
     mSkyBox = std::make_shared<SkyBox>("Resources/SkyBox", ".png");
 
+    mSphereModel = new Model(std::make_shared<Sphere>());
+
     Resize(INITIAL_WIDTH, INITIAL_HEIGHT);
 }
 
@@ -64,13 +66,11 @@ void BSplineRenderer::RendererManager::Render()
     mSkyBoxShader->Release();
 
     mModelShader->Bind();
-    mModelShader->SetUniformValue("cameraPosition", mCamera->GetPosition());
     mModelShader->SetUniformValue("viewProjectionMatrix", mCamera->GetProjectionMatrix() * mCamera->GetViewMatrix());
     mModelShader->SetUniformValue("light.color", mLight->GetColor());
     mModelShader->SetUniformValue("light.direction", mLight->GetDirection());
     mModelShader->SetUniformValue("light.ambient", mLight->GetAmbient());
     mModelShader->SetUniformValue("light.diffuse", mLight->GetDiffuse());
-    mModelShader->SetUniformValue("light.specular", mLight->GetSpecular());
 
     for (const auto& model : mModels)
     {
@@ -79,12 +79,15 @@ void BSplineRenderer::RendererManager::Render()
         mModelShader->SetUniformValue("model.color", model->GetColor());
         mModelShader->SetUniformValue("model.ambient", model->GetAmbient());
         mModelShader->SetUniformValue("model.diffuse", model->GetDiffuse());
-        mModelShader->SetUniformValue("model.specular", model->GetSpecular());
-        mModelShader->SetUniformValue("model.shininess", model->GetShininess());
         model->GetMesh()->Render();
     }
 
     mModelShader->Release();
+
+    if (mSelectedCurve)
+    {
+        RenderKnots(mSelectedCurve);
+    }
 
     mSplineRenderer->Render();
     mCurveSelectionRenderer->Render();
@@ -131,4 +134,37 @@ int BSplineRenderer::RendererManager::GetNumberOfSectors() const
 bool* BSplineRenderer::RendererManager::GetWireframe()
 {
     return &mSplineRenderer->GetWireframe_NonConst();
+}
+
+void BSplineRenderer::RendererManager::RenderKnots(SplinePtr curve)
+{
+    const auto& knots = curve->GetKnots();
+    const float r = curve->GetRadius();
+
+    mModelShader->Bind();
+    mModelShader->SetUniformValue("model.ambient", mSphereModel->GetAmbient());
+    mModelShader->SetUniformValue("model.diffuse", mSphereModel->GetDiffuse());
+
+    for (const auto& knot : knots)
+    {
+        if (mSelectedKnot == knot)
+        {
+            mSphereModel->SetColor(QVector4D(0, 1, 0, 1));
+            mSphereModel->SetScale(2 * r, 2 * r, 2 * r);
+        }
+        else
+        {
+            mSphereModel->SetColor(QVector4D(1, 1, 0, 1));
+            mSphereModel->SetScale(2 * r, 2 * r, 2 * r);
+        }
+
+        mSphereModel->SetPosition(knot->GetPosition());
+        mModelShader->SetUniformValue("modelMatrix", mSphereModel->GetTransformation());
+        mModelShader->SetUniformValue("normalMatrix", mSphereModel->GetTransformation().normalMatrix());
+        mModelShader->SetUniformValue("model.color", mSphereModel->GetColor());
+
+        mSphereModel->GetMesh()->Render();
+    }
+
+    mModelShader->Release();
 }

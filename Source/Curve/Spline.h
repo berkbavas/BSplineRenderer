@@ -21,6 +21,8 @@ namespace BSplineRenderer
 
         const QVector<KnotPtr>& GetKnots() const { return mKnots; }
 
+        KnotPtr GetClosestKnotToRay(const QVector3D& rayOrigin, const QVector3D& rayDirection, float maxDistance) const;
+
         void Render();
         void Update();
         void MakeDirty();
@@ -47,7 +49,7 @@ namespace BSplineRenderer
 
         DEFINE_MEMBER(QVector4D, Color, QVector4D(1.0f, 1.0f, 1.0f, 1.0f));
         DEFINE_MEMBER(float, Ambient, 0.25f);
-        DEFINE_MEMBER(float, Diffuse, 0.75f);
+        DEFINE_MEMBER(float, Diffuse, 0.50f);
         DEFINE_MEMBER(float, Specular, 0.25f);
         DEFINE_MEMBER(float, Shininess, 4.0f);
         DEFINE_MEMBER(float, Radius, DEFAULT_RADIUS);

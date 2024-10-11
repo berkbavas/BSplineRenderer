@@ -1,5 +1,7 @@
 #pragma once
 
+#include "Curve/Knot.h"
+#include "Curve/Spline.h"
 #include "Util/Macros.h"
 
 #include <QObject>
@@ -24,5 +26,8 @@ namespace BSplineRenderer
         int mNumberOfSectors;
 
         RendererManager* mRendererManager;
+
+        DEFINE_MEMBER(SplinePtr, SelectedCurve, nullptr);
+        DEFINE_MEMBER(KnotPtr, SelectedKnot, nullptr);
     };
 }

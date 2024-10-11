@@ -27,12 +27,10 @@ void BSplineRenderer::SplineRenderer::Render()
     mSplineShader->SetUniformValue("numberOfSectors", mNumberOfSectors);
     mSplineShader->SetUniformValue("VP", mCamera->GetProjectionMatrix() * mCamera->GetViewMatrix());
 
-    mSplineShader->SetUniformValue("cameraPosition", mCamera->GetPosition());
     mSplineShader->SetUniformValue("light.color", mLight->GetColor());
     mSplineShader->SetUniformValue("light.direction", mLight->GetDirection());
     mSplineShader->SetUniformValue("light.ambient", mLight->GetAmbient());
     mSplineShader->SetUniformValue("light.diffuse", mLight->GetDiffuse());
-    mSplineShader->SetUniformValue("light.specular", mLight->GetSpecular());
 
     const auto& curves = mCurveContainer->GetCurves();
 
@@ -42,8 +40,6 @@ void BSplineRenderer::SplineRenderer::Render()
         mSplineShader->SetUniformValue("curve.color", curve->GetColor());
         mSplineShader->SetUniformValue("curve.ambient", curve->GetAmbient());
         mSplineShader->SetUniformValue("curve.diffuse", curve->GetDiffuse());
-        mSplineShader->SetUniformValue("curve.specular", curve->GetSpecular());
-        mSplineShader->SetUniformValue("curve.shininess", curve->GetShininess());
         mSplineShader->SetUniformValue("radius", curve->GetRadius());
         curve->Render();
     }

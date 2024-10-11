@@ -10,7 +10,6 @@
 
 namespace BSplineRenderer
 {
-
     class CurveContainer;
 
     class SplineRenderer : protected QOpenGLFunctions_4_5_Core

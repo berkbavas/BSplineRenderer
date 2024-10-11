@@ -9,8 +9,8 @@ void main()
 {
     gl_out[gl_InvocationID].gl_Position = gl_in[gl_InvocationID].gl_Position;
 
-    gl_TessLevelInner[0] = float(numberOfSectors);
-    gl_TessLevelInner[1] = float(numberOfSegments);
+    gl_TessLevelInner[0] = float(numberOfSegments);
+    gl_TessLevelInner[1] = float(numberOfSectors);
 
     gl_TessLevelOuter[0] = gl_TessLevelInner[1];
     gl_TessLevelOuter[1] = gl_TessLevelInner[0];

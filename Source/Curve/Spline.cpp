@@ -124,13 +124,15 @@ void BSplineRenderer::Spline::ContructOpenGLStuff()
 
     if (mVertexArray == 0 || mVertexBuffer == 0)
     {
-        BR_EXIT_FAILURE("Spline::ContructOpenGLStuff: OpenGL handle(s) could not be created!");
+        BR_EXIT_FAILURE("Spline::ContructOpenGLStuff: OpenGL handle(s) could not be created! this = {:#010x}", reinterpret_cast<intptr_t>(this));
     }
 
     glBindBuffer(GL_ARRAY_BUFFER, 0);
     glBindVertexArray(0);
 
-    qDebug() << "Spline::ContructOpenGLStuff: OpenGL stuff for Spline has been constructed." << this;
+    LOG_DEBUG("Spline::ContructOpenGLStuff: OpenGL stuff for Spline has been constructed. "
+              "this = {:#010x}, mVertexArray = {}, mVertexBuffer = {}, # of Knots: {}",
+              reinterpret_cast<intptr_t>(this), mVertexArray, mVertexBuffer, mKnots.size());
 }
 
 void BSplineRenderer::Spline::InitializeOpenGLStuffIfNot()
@@ -218,4 +220,34 @@ void BSplineRenderer::Spline::UpdateSplineControlPoints()
     {
         mSplineControlPoints[i + 1] = QVector3D(controlPoints(i, 0), controlPoints(i, 1), controlPoints(i, 2));
     }
+}
+
+BSplineRenderer::KnotPtr BSplineRenderer::Spline::GetClosestKnotToRay(const QVector3D& rayOrigin, const QVector3D& rayDirection, float maxDistance) const
+{
+    float minDistance = std::numeric_limits<float>::infinity();
+    KnotPtr closestKnot = nullptr;
+
+    for (auto& knot : mKnots)
+    {
+        QVector3D difference = knot->GetPosition() - rayOrigin;
+
+        float dot = QVector3D::dotProduct(difference, rayDirection);
+
+        if (dot >= 0.0f)
+        {
+            float distance = (difference - rayDirection * dot).length();
+            if (distance < minDistance)
+            {
+                minDistance = distance;
+                closestKnot = knot;
+            }
+        }
+    }
+
+    if (minDistance >= maxDistance)
+    {
+        closestKnot = nullptr;
+    }
+
+    return closestKnot;
 }

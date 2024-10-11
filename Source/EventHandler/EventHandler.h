@@ -42,7 +42,10 @@ namespace BSplineRenderer
         void SelectedCurveChanged(SplinePtr curve);
 
       private:
-        void TrySelectCurve(const QPoint& mousePosition);
+        void TrySelectKnot(float x, float y);
+        void TrySelectCurve(float x, float y);
+        void UpdateKnotTranslationPlane();
+        Eigen::ParametrizedLine<float, 3> GetRayFromScreenCoordinates(float x, float y);
 
         FreeCameraPtr mCamera;
         Mouse mMouse;
@@ -53,6 +56,30 @@ namespace BSplineRenderer
         RendererManager* mRendererManager;
 
         float mDevicePixelRatio{ 1.0f };
+
+        Eigen::Hyperplane<float, 3> mKnotTranslationPlane;
+
+        template<typename T>
+        T GetCameraViewDirection()
+        {
+            const auto& viewDirection = mCamera->GetViewDirection();
+            return T(viewDirection[0], viewDirection[1], viewDirection[2]);
+        }
+
+        template<typename T>
+        T GetCameraPosition()
+        {
+            const auto& position = mCamera->GetPosition();
+
+            return T(position[0], position[1], position[2]);
+        }
+
+        template<typename T>
+        T GetDirectionFromScreenCoodinates(int x, int y)
+        {
+            const auto& direction = mCamera->GetDirectionFromScreenCoodinates(x, y);
+            return T(direction[0], direction[1], direction[2]);
+        }
     };
 
 }

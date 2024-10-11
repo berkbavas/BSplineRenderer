@@ -37,6 +37,18 @@ BSplineRenderer::Controller::Controller(QObject* parent)
     connect(mWindow, &Window::WheelMoved, this, &Controller::OnWheelMoved);
     connect(mWindow, &Window::KeyPressed, this, &Controller::OnKeyPressed);
     connect(mWindow, &Window::KeyReleased, this, &Controller::OnKeyReleased);
+
+    connect(mEventHandler, &EventHandler::SelectedCurveChanged, this, [this](SplinePtr curve)
+            {
+                mRendererManager->SetSelectedCurve(curve);
+                mImGuiWindow->SetSelectedCurve(curve); //
+            });
+
+    connect(mEventHandler, &EventHandler::SelectedKnotChanged, this, [this](KnotPtr knot)
+            {
+                mRendererManager->SetSelectedKnot(knot);
+                mImGuiWindow->SetSelectedKnot(knot); //
+            });
 }
 
 BSplineRenderer::Controller::~Controller()

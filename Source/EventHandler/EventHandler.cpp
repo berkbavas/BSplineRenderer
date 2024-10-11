@@ -28,19 +28,18 @@ void BSplineRenderer::EventHandler::OnMousePressed(QMouseEvent* event)
 
     if (event->button() == Qt::LeftButton)
     {
-        TrySelectCurve(event->position().toPoint());
+        TrySelectCurve(mMouse.x, mMouse.y);
+
+        if (mSelectedCurve)
+        {
+            TrySelectKnot(mMouse.x, mMouse.y);
+        }
     }
     else if (event->button() == Qt::RightButton)
     {
-        QVector3D rayDirection = mCamera->GetDirectionFromScreenCoodinates(mMouse.x, mMouse.y);
-        QVector3D rayOrigin = mCamera->GetPosition();
-        QVector3D viewDirection = mCamera->GetViewDirection();
-
-        Eigen::Vector3f direction = Eigen::Vector3f(rayDirection.x(), rayDirection.y(), rayDirection.z());
-        Eigen::Vector3f origin = Eigen::Vector3f(rayOrigin.x(), rayOrigin.y(), rayOrigin.z());
-        Eigen::Vector3f normal = Eigen::Vector3f(viewDirection.x(), viewDirection.y(), viewDirection.z());
-
-        const auto ray = Eigen::ParametrizedLine<float, 3>(origin, direction);
+        Eigen::Vector3f normal = GetCameraViewDirection<Eigen::Vector3f>();
+        Eigen::Vector3f origin = GetCameraPosition<Eigen::Vector3f>();
+        Eigen::ParametrizedLine<float, 3> ray = GetRayFromScreenCoordinates(mMouse.x, mMouse.y);
 
         if (mSelectedCurve)
         {
@@ -95,6 +94,29 @@ void BSplineRenderer::EventHandler::OnMouseReleased(QMouseEvent* event)
 void BSplineRenderer::EventHandler::OnMouseMoved(QMouseEvent* event)
 {
     mCamera->MouseMoved(event);
+
+    mMouse.x = event->x() * mDevicePixelRatio;
+    mMouse.y = event->y() * mDevicePixelRatio;
+
+    if (mMouse.button == Qt::LeftButton)
+    {
+        if (mSelectedKnot)
+        {
+            Eigen::ParametrizedLine<float, 3> line = GetRayFromScreenCoordinates(mMouse.x, mMouse.y);
+            float t = line.intersection(mKnotTranslationPlane);
+            Eigen::Vector3f intersection = line.pointAt(t);
+
+            if (std::isnan(t) == false && std::isinf(t) == false)
+            {
+                mSelectedKnot->SetPosition(intersection.x(), intersection.y(), intersection.z());
+
+                if (mSelectedCurve)
+                {
+                    mSelectedCurve->MakeDirty();
+                }
+            }
+        }
+    }
 }
 
 void BSplineRenderer::EventHandler::OnWheelMoved(QWheelEvent* event)
@@ -113,7 +135,7 @@ void BSplineRenderer::EventHandler::SetSelectedKnot(KnotPtr knot)
         return;
 
     mSelectedKnot = knot;
-    emit SelectedKnotChanged(knot);
+    emit SelectedKnotChanged(mSelectedKnot);
 }
 
 void BSplineRenderer::EventHandler::SetSelectedCurve(SplinePtr spline)
@@ -123,12 +145,27 @@ void BSplineRenderer::EventHandler::SetSelectedCurve(SplinePtr spline)
 
     SetSelectedKnot(nullptr);
     mSelectedCurve = spline;
-    emit SelectedCurveChanged(spline);
+    emit SelectedCurveChanged(mSelectedCurve);
 }
 
-void BSplineRenderer::EventHandler::TrySelectCurve(const QPoint& mousePosition)
+void BSplineRenderer::EventHandler::TrySelectKnot(float x, float y)
 {
-    CurveQueryInfo info = mRendererManager->Query(mousePosition);
+    KnotPtr selectedKnot = nullptr;
+
+    if (mSelectedCurve)
+    {
+        QVector3D direction = mCamera->GetDirectionFromScreenCoodinates(x, y);
+        QVector3D origin = mCamera->GetPosition();
+        selectedKnot = mSelectedCurve->GetClosestKnotToRay(origin, direction, 2.0f * mSelectedCurve->GetRadius());
+    }
+
+    SetSelectedKnot(selectedKnot);
+    UpdateKnotTranslationPlane();
+}
+
+void BSplineRenderer::EventHandler::TrySelectCurve(float x, float y)
+{
+    CurveQueryInfo info = mRendererManager->Query(QPoint(x, y));
 
     if (info.result == 1)
     {
@@ -138,4 +175,25 @@ void BSplineRenderer::EventHandler::TrySelectCurve(const QPoint& mousePosition)
     {
         SetSelectedCurve(nullptr);
     }
+}
+
+void BSplineRenderer::EventHandler::UpdateKnotTranslationPlane()
+{
+    if (mSelectedKnot)
+    {
+        const float x = mSelectedKnot->GetPosition().x();
+        const float y = mSelectedKnot->GetPosition().y();
+        const float z = mSelectedKnot->GetPosition().z();
+        Eigen::Vector3f knotPosition = Eigen::Vector3f(x, y, z);
+        Eigen::Vector3f normal = GetCameraViewDirection<Eigen::Vector3f>();
+        mKnotTranslationPlane = Eigen::Hyperplane<float, 3>(normal, -normal.dot(knotPosition));
+    }
+}
+
+Eigen::ParametrizedLine<float, 3> BSplineRenderer::EventHandler::GetRayFromScreenCoordinates(float x, float y)
+{
+    Eigen::Vector3f direction = GetDirectionFromScreenCoodinates<Eigen::Vector3f>(x, y);
+    Eigen::Vector3f origin = GetCameraPosition<Eigen::Vector3f>();
+
+    return Eigen::ParametrizedLine<float, 3>(origin, direction);
 }
