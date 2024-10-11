@@ -40,7 +40,7 @@ void BSplineRenderer::ImGuiWindow::Draw()
     {
         if (mSelectedCurve)
         {
-            ImGui::Text("Pointer: 0x%p", mSelectedCurve);
+            ImGui::Text("Pointer: 0x%p", mSelectedCurve.get());
             ImGui::Text("# of Knots: %zu", mSelectedCurve->GetKnots().size());
             ImGui::SliderFloat("Radius", &mSelectedCurve->GetRadius_NonConst(), 0.10f, 0.50f);
             ImGui::SliderFloat("Ambient", &mSelectedCurve->GetAmbient_NonConst(), 0.0f, 1.0f);
