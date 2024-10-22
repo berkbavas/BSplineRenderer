@@ -16,8 +16,8 @@ set(INCLUDE_DIR Libs/qtimgui/include
 
 set(LIBS_DIR Libs/qtimgui/lib)
 
-set(LIBS    debug   debug/imgui  
-            debug   debug/qt_imgui_widgets                
+set(LIBS    debug debug/imgui
+            debug debug/qt_imgui_widgets
             optimized release/imgui
             optimized release/qt_imgui_widgets)
 
@@ -36,10 +36,13 @@ add_executable(BSplineRenderer ${SOURCES})
 target_link_libraries(BSplineRenderer Qt6::Core Qt6::Widgets Qt6::OpenGL Qt6::Concurrent ${LIBS})
 
 add_custom_command(TARGET BSplineRenderer
-POST_BUILD COMMAND xcopy /E /Y "\"$(SolutionDir)../Resources\"" "\"$(OutDir)Resources/*\"")
+    POST_BUILD COMMAND ${CMAKE_COMMAND}
+    -E copy_directory
+    "${CMAKE_SOURCE_DIR}/Resources/"
+    "$<TARGET_FILE_DIR:BSplineRenderer>/Resources/")
 
 add_custom_command(TARGET BSplineRenderer
-POST_BUILD COMMAND xcopy /E /Y "\"$(SolutionDir)../Resources\"" "\"$(BuildDir)Resources/*\"")
-
-add_custom_command(TARGET BSplineRenderer
-POST_BUILD COMMAND "$ENV{Qt6_DIR}/bin/windeployqt.exe" "\"$(OutDir)$(TargetName)$(TargetExt)\"")
+    POST_BUILD COMMAND
+    Qt6::windeployqt
+    --dir "$<TARGET_FILE_DIR:BSplineRenderer>"
+    "$<TARGET_FILE_DIR:BSplineRenderer>/$<TARGET_FILE_NAME:BSplineRenderer>")
