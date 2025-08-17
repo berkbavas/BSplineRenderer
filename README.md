@@ -51,7 +51,7 @@ The core algorithm is based on [this reference](https://www.math.ucla.edu/~baker
 
 7. **Build the project:**
 
-    - Select the `Release` configuration and build
+    - Build and run.
 
 ## Demo Video
 
