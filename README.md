@@ -18,6 +18,7 @@ The core algorithm is based on [this reference](https://www.math.ucla.edu/~baker
 
 ## Build Instructions
 
+
 1. **Install dependencies:**
 
 	- [CMake 3.25.1+](https://cmake.org/download/)
@@ -55,6 +56,7 @@ The core algorithm is based on [this reference](https://www.math.ucla.edu/~baker
 
 	- Select the `Release` configuration and build
 
+
 ## Demo Video
 
 [Project Demo](https://github.com/user-attachments/assets/5b382d66-f9cf-46d2-999f-00e230bbb8b8)
@@ -62,4 +64,8 @@ The core algorithm is based on [this reference](https://www.math.ucla.edu/~baker
 ---
 
 For more details on the mathematics of B-splines, see the [UCLA handout](https://www.math.ucla.edu/~baker/149.1.02w/handouts/dd_splines.pdf).
+
+## License
+
+This project is licensed under the [MIT License](LICENSE).
 
