@@ -1,5 +1,3 @@
-
-
 # B-Spline Renderer
 
 Render 3D B-splines in C++ using **Qt**, **OpenGL**, and **Eigen**.
@@ -18,54 +16,49 @@ The core algorithm is based on [this reference](https://www.math.ucla.edu/~baker
 
 ## Build Instructions
 
-
 1. **Install dependencies:**
 
-	- [CMake 3.25.1+](https://cmake.org/download/)
-	- [Visual Studio 2022](https://visualstudio.microsoft.com/vs/) with MSVC C++ v143 compiler
-	- [Qt 6.7.3 MSVC2022 64bit](https://www.qt.io/download)
+    - [CMake 3.25.1+](https://cmake.org/download/)
+    - [Visual Studio 2022](https://visualstudio.microsoft.com/vs/) with MSVC C++ v143 compiler
+    - [Qt 6.7.3 MSVC2022 64bit](https://www.qt.io/download)
 
 2. **Set environment variable:**
 
-	- `Qt6_DIR` to `C:\Qt\6.7.3\msvc2022_64`
+    - `Qt6_DIR` to `C:\Qt\6.7.3\msvc2022_64`
 
 3. **Clone the repository:**
 
-	```sh
-	git clone https://github.com/berkbavas/BSplineRenderer.git
-	```
+    ```sh
+    git clone https://github.com/berkbavas/BSplineRenderer.git
+    ```
 
 4. **Create and enter build directory:**
 
-	```sh
-	mkdir Build
-	cd Build
-	```
+    ```sh
+    mkdir Build
+    cd Build
+    ```
 
 5. **Generate build files with CMake:**
 
-	```sh
-	cmake ..
-	```
+    ```sh
+    cmake ..
+    ```
 
 6. **Open the solution in Visual Studio:**
 
-	- Open `BSplineRenderer.sln` in Visual Studio 2022
+    - Open `BSplineRenderer.sln` in Visual Studio 2022
 
 7. **Build the project:**
 
-	- Select the `Release` configuration and build
-
+    - Select the `Release` configuration and build
 
 ## Demo Video
 
 [Project Demo](https://github.com/user-attachments/assets/5b382d66-f9cf-46d2-999f-00e230bbb8b8)
-
----
 
 For more details on the mathematics of B-splines, see the [UCLA handout](https://www.math.ucla.edu/~baker/149.1.02w/handouts/dd_splines.pdf).
 
 ## License
 
 This project is licensed under the [MIT License](LICENSE).
-
