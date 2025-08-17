@@ -57,7 +57,7 @@ The core algorithm is based on [this reference](https://www.math.ucla.edu/~baker
 
 ## Demo Video
 
-[Project Demo](https://github.com/user-attachments/assets/daf205b8-dc9c-4aac-8f7b-df823693db86)
+[Project Demo]([https://github.com/user-attachments/assets/daf205b8-dc9c-4aac-8f7b-df823693db86](https://github.com/user-attachments/assets/5b382d66-f9cf-46d2-999f-00e230bbb8b8))
 
 ---
 
