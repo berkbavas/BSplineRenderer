@@ -19,6 +19,15 @@ namespace BSplineRenderer
         KnotPtr AddKnot(float x, float y, float z);
         KnotPtr AddKnot(const QVector3D& position);
 
+        void RemoveLastKnot();
+        void RemoveKnot(KnotPtr knot);
+        void ClearKnots();
+
+        int GetKnotCount() const { return mKnots.size(); }
+        float GetTotalLength() const;
+        QVector3D GetCentroid() const;
+        QPair<QVector3D, QVector3D> GetBoundingBox() const;
+
         const QVector<KnotPtr>& GetKnots() const { return mKnots; }
 
         KnotPtr GetClosestKnotToRay(const QVector3D& rayOrigin, const QVector3D& rayDirection, float maxDistance) const;

@@ -41,6 +41,8 @@ namespace BSplineRenderer
         void OnWheelMoved(QWheelEvent*);
 
       private:
+        void ApplyCameraPreset(int preset);
+
         float mDevicePixelRatio{ 1.0f };
         float mWidth{ INITIAL_WIDTH };
         float mHeight{ INITIAL_HEIGHT };

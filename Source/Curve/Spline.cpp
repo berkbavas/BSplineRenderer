@@ -251,3 +251,69 @@ BSplineRenderer::KnotPtr BSplineRenderer::Spline::GetClosestKnotToRay(const QVec
 
     return closestKnot;
 }
+
+void BSplineRenderer::Spline::RemoveLastKnot()
+{
+    if (!mKnots.isEmpty())
+    {
+        mKnots.removeLast();
+        MakeDirty();
+    }
+}
+
+void BSplineRenderer::Spline::RemoveKnot(KnotPtr knot)
+{
+    mKnots.removeAll(knot);
+    MakeDirty();
+}
+
+void BSplineRenderer::Spline::ClearKnots()
+{
+    mKnots.clear();
+    MakeDirty();
+}
+
+float BSplineRenderer::Spline::GetTotalLength() const
+{
+    float length = 0.0f;
+    for (int i = 1; i < mKnots.size(); ++i)
+    {
+        length += (mKnots[i]->GetPosition() - mKnots[i - 1]->GetPosition()).length();
+    }
+    return length;
+}
+
+QVector3D BSplineRenderer::Spline::GetCentroid() const
+{
+    if (mKnots.isEmpty())
+        return QVector3D(0, 0, 0);
+
+    QVector3D sum(0, 0, 0);
+    for (const auto& knot : mKnots)
+    {
+        sum += knot->GetPosition();
+    }
+    return sum / mKnots.size();
+}
+
+QPair<QVector3D, QVector3D> BSplineRenderer::Spline::GetBoundingBox() const
+{
+    if (mKnots.isEmpty())
+        return { QVector3D(0, 0, 0), QVector3D(0, 0, 0) };
+
+    QVector3D minPos = mKnots[0]->GetPosition();
+    QVector3D maxPos = mKnots[0]->GetPosition();
+
+    for (const auto& knot : mKnots)
+    {
+        const QVector3D& pos = knot->GetPosition();
+        minPos.setX(std::min(minPos.x(), pos.x()));
+        minPos.setY(std::min(minPos.y(), pos.y()));
+        minPos.setZ(std::min(minPos.z(), pos.z()));
+        maxPos.setX(std::max(maxPos.x(), pos.x()));
+        maxPos.setY(std::max(maxPos.y(), pos.y()));
+        maxPos.setZ(std::max(maxPos.z(), pos.z()));
+    }
+
+    return { minPos, maxPos };
+}

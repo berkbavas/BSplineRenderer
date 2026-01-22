@@ -1,7 +1,9 @@
 #include "Controller.h"
 
+#include "Core/AnimationManager.h"
 #include "Core/Constants.h"
 #include "Core/CurveContainer.h"
+#include "Core/UndoRedoManager.h"
 #include "Core/Window.h"
 #include "Gui/ImGuiWindow.h"
 #include "Renderer/RendererManager.h"
@@ -27,6 +29,7 @@ BSplineRenderer::Controller::Controller(QObject* parent)
 
     mRendererManager->SetCurveContainer(mCurveContainer);
     mImGuiWindow->SetRendererManager(mRendererManager);
+    mImGuiWindow->SetCurveContainer(mCurveContainer);
 
     connect(mWindow, &Window::Initialize, this, &Controller::Initialize);
     connect(mWindow, &Window::Render, this, &Controller::Render);
@@ -52,6 +55,19 @@ BSplineRenderer::Controller::Controller(QObject* parent)
 
     connect(mEventHandler, &EventHandler::KnotAroundChanged, this, [this](KnotPtr knot)
             { mRendererManager->SetKnotAround(knot); });
+
+    // Connect ImGuiWindow signals
+    connect(mImGuiWindow, &ImGuiWindow::RequestCameraReset, this, [this]()
+            { mCamera->Reset(); });
+
+    connect(mImGuiWindow, &ImGuiWindow::RequestCameraPreset, this, [this](int preset)
+            { ApplyCameraPreset(preset); });
+
+    connect(mImGuiWindow, &ImGuiWindow::CurveAdded, this, [this](SplinePtr spline)
+            {
+                mEventHandler->SetSelectedCurve(spline);
+                LOG_INFO("Preset shape added with {} knots", spline->GetKnotCount());
+            });
 }
 
 BSplineRenderer::Controller::~Controller()
@@ -84,6 +100,9 @@ void BSplineRenderer::Controller::Render(float ifps)
     mCamera->Resize(mWidth, mHeight);
     mCamera->Update(ifps);
     mEventHandler->SetDevicePixelRatio(mDevicePixelRatio);
+
+    // Update animations
+    AnimationManager::Instance().Update(ifps, mCurveContainer);
 
     mRendererManager->Render();
 
@@ -152,4 +171,40 @@ void BSplineRenderer::Controller::OnWheelMoved(QWheelEvent* event)
     }
 
     mEventHandler->OnWheelMoved(event);
+}
+
+void BSplineRenderer::Controller::ApplyCameraPreset(int preset)
+{
+    // Camera preset positions
+    switch (preset)
+    {
+    case 0: // Front
+        mCamera->SetPosition(QVector3D(0, 0, 30));
+        mCamera->SetRotation(QQuaternion::fromEulerAngles(0, 0, 0));
+        break;
+    case 1: // Back
+        mCamera->SetPosition(QVector3D(0, 0, -30));
+        mCamera->SetRotation(QQuaternion::fromEulerAngles(0, 180, 0));
+        break;
+    case 2: // Left
+        mCamera->SetPosition(QVector3D(-30, 0, 0));
+        mCamera->SetRotation(QQuaternion::fromEulerAngles(0, 90, 0));
+        break;
+    case 3: // Right
+        mCamera->SetPosition(QVector3D(30, 0, 0));
+        mCamera->SetRotation(QQuaternion::fromEulerAngles(0, -90, 0));
+        break;
+    case 4: // Top
+        mCamera->SetPosition(QVector3D(0, 30, 0));
+        mCamera->SetRotation(QQuaternion::fromEulerAngles(90, 0, 0));
+        break;
+    case 5: // Bottom
+        mCamera->SetPosition(QVector3D(0, -30, 0));
+        mCamera->SetRotation(QQuaternion::fromEulerAngles(-90, 0, 0));
+        break;
+    case 6: // Isometric
+        mCamera->SetPosition(QVector3D(20, 20, 20));
+        mCamera->SetRotation(QQuaternion::fromEulerAngles(35.264f, -45, 0));
+        break;
+    }
 }
